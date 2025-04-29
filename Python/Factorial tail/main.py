@@ -36,10 +36,18 @@ def factor_into_primes(number: int) -> list[int]:
 
 
 def zeroes(base: int, number: int) -> int:
-    div_dict: dict[int, int] = get_frequencies(
-        sum([factor_into_primes(i) for i in range(1, number + 1)], [])
-    )
     base_div_dict: dict[int, int] = get_frequencies(factor_into_primes(base))
+
+    div_list: list[int] = []
+
+    for p in base_div_dict.keys():
+        for num in range(1, number + 1):
+            cache_num: int = num
+            while divide(cache_num, p):
+                div_list.append(p)
+                cache_num = int(cache_num / p)
+
+    div_dict: dict[int, int] = get_frequencies(div_list)
 
     return math.floor(
         min(div_dict.get(p, 0) / freq for p, freq in base_div_dict.items())
